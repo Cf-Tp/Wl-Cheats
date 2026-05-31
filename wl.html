@@ -330,26 +330,21 @@
 
   <script>
     // ==============================================
-    // PROTEÇÃO DA PÁGINA wl.html
+    // REDIRECIONAMENTO - SEMPRE VOLTA PRO CAPTCHA
     // ==============================================
     
-    function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            if (cookie.startsWith(name + "=")) {
-                return cookie.substring(name.length + 1);
-            }
-        }
-        return null;
-    }
-
-    // Verificar se tem o cookie de verificação
-    const verified = getCookie('wl_verified');
+    // SEMPRE que a página wl for carregada, volta pro captcha
+    // PORÉM, se veio do re (com um parâmetro ou sessionStorage), deixa passar
     
-    if (verified !== 'true') {
-        // Não tem cookie, volta pro captcha
+    // Verificar se veio do captcha
+    const fromCaptcha = sessionStorage.getItem('from_captcha');
+    
+    if (!fromCaptcha) {
+        // Não veio do captcha, redireciona
         window.location.href = '/re';
+    } else {
+        // Veio do captcha, limpa e mostra o conteúdo
+        sessionStorage.removeItem('from_captcha');
     }
 
     // ==============================================
