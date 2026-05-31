@@ -92,8 +92,40 @@ document.addEventListener('keydown', e => {
 })();
 
 // ═══════════════════════════════════════════════════
-//  GATE — LOGIN COM DISCORD
+//  GATE — LOGIN COM DISCORD + CLOUDFLARE TURNSTILE
 // ═══════════════════════════════════════════════════
+
+// Variável global para controle do Turnstile
+let turnstileVerified = false;
+
+// Callbacks do Cloudflare Turnstile
+function onTurnstileSuccess(token) {
+  turnstileVerified = true;
+  const confirmBtn = document.getElementById('confirmBtn');
+  if (confirmBtn) {
+    confirmBtn.disabled = false;
+    confirmBtn.classList.add('ready');
+  }
+}
+
+function onTurnstileExpired() {
+  turnstileVerified = false;
+  const confirmBtn = document.getElementById('confirmBtn');
+  if (confirmBtn) {
+    confirmBtn.disabled = true;
+    confirmBtn.classList.remove('ready');
+  }
+}
+
+function onTurnstileError() {
+  turnstileVerified = false;
+  const confirmBtn = document.getElementById('confirmBtn');
+  if (confirmBtn) {
+    confirmBtn.disabled = true;
+    confirmBtn.classList.remove('ready');
+  }
+  alert('Erro na verificação de segurança. Tente novamente.');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -113,16 +145,57 @@ document.addEventListener('DOMContentLoaded', () => {
   window.onDiscordClick = function () {
     discordClicked = true;
 
-    // Após 2 s habilita o botão "Já autorizei"
-    setTimeout(() => {
-      confirmBtn.classList.add('ready');
-      confirmBtn.disabled = false;
-    }, 2000);
+    // Mostra a seção de confirmação com o Turnstile
+    const gateConfirm = document.getElementById('gateConfirm');
+    if (gateConfirm) {
+      gateConfirm.style.display = 'block';
+    }
+
+    // Recarrega o widget do Turnstile se necessário
+    if (typeof turnstile !== 'undefined') {
+      setTimeout(() => {
+        turnstile.reset();
+      }, 100);
+    }
   };
 
-  // Confirmar acesso após autorizar no Discord
+  // Confirmar acesso após autorizar no Discord E verificar Turnstile
   window.confirmAccess = function () {
-    if (!discordClicked) return;
+    if (!discordClicked) {
+      alert('Por favor, clique primeiro no botão do Discord para autorizar.');
+      return;
+    }
+
+    if (!turnstileVerified) {
+      alert('Por favor, complete a verificação de segurança do Cloudflare primeiro.');
+      return;
+    }
+
+    // Verifica se o token do Turnstile ainda é válido
+    if (typeof turnstile !== 'undefined') {
+      const token = turnstile.getResponse();
+      if (!token) {
+        alert('Verificação de segurança expirada. Por favor, complete novamente.');
+        return;
+      }
+      
+      // Aqui você pode enviar o token para seu servidor para validação adicional
+      // Exemplo: enviar token via fetch para seu backend
+      /*
+      fetch('/verify-turnstile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+      }).then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            localStorage.setItem('wl_auth', '1');
+            openSite(true);
+          }
+        });
+      */
+    }
+
     localStorage.setItem('wl_auth', '1');
     openSite(true);
   };
