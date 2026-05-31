@@ -92,39 +92,8 @@ document.addEventListener('keydown', e => {
 })();
 
 // ═══════════════════════════════════════════════════
-//  GATE — LOGIN COM DISCORD + CLOUDFLARE TURNSTILE
-//  (modo compatibilidade reCAPTCHA)
+//  GATE — LOGIN COM DISCORD
 // ═══════════════════════════════════════════════════
-
-// Variáveis globais de controle
-let turnstileToken = null;
-let turnstileWidgetId = null;
-
-// Callback executado quando o Turnstile é resolvido com sucesso
-function onTurnstileSuccess(token) {
-  turnstileToken = token;
-  const confirmBtn = document.getElementById('confirmBtn');
-  if (confirmBtn) {
-    confirmBtn.disabled = false;
-    confirmBtn.classList.add('ready');
-  }
-}
-
-// Callback executado quando o token expira
-function onTurnstileExpired() {
-  turnstileToken = null;
-  const confirmBtn = document.getElementById('confirmBtn');
-  if (confirmBtn) {
-    confirmBtn.disabled = true;
-    confirmBtn.classList.remove('ready');
-  }
-}
-
-// Callback executado em caso de erro
-function onTurnstileError() {
-  turnstileToken = null;
-  alert('Erro na verificação de segurança. Recarregue a página e tente novamente.');
-}
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -144,59 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
   window.onDiscordClick = function () {
     discordClicked = true;
 
-    const gateConfirm = document.getElementById('gateConfirm');
-    if (gateConfirm) {
-      gateConfirm.style.display = 'block';
-    }
-
-    // Renderiza o Turnstile usando a API de compatibilidade reCAPTCHA
-    // Aguarda um pequeno delay para garantir que o container esteja visível
+    // Após 2 s habilita o botão "Já autorizei"
     setTimeout(() => {
-      if (typeof grecaptcha !== 'undefined') {
-        // Se já existe um widget, reseta
-        if (turnstileWidgetId !== null) {
-          grecaptcha.reset(turnstileWidgetId);
-        } else {
-          // Renderiza o widget Turnstile
-          turnstileWidgetId = grecaptcha.render('turnstile-container', {
-            sitekey: '0x4AAAAAADbni3_CIJMk_A6S',
-            callback: onTurnstileSuccess,
-            'expired-callback': onTurnstileExpired,
-            'error-callback': onTurnstileError,
-            theme: 'dark'
-          });
-        }
-      } else {
-        console.error('Turnstile (grecaptcha) não está disponível');
-      }
-    }, 300);
+      confirmBtn.classList.add('ready');
+      confirmBtn.disabled = false;
+    }, 2000);
   };
 
-  // Confirmar acesso
+  // Confirmar acesso após autorizar no Discord
   window.confirmAccess = function () {
-    if (!discordClicked) {
-      alert('Por favor, clique primeiro no botão do Discord para autorizar.');
-      return;
-    }
-
-    if (!turnstileToken) {
-      alert('Por favor, complete a verificação de segurança do Turnstile.');
-      return;
-    }
-
-    // Obtém o token do Turnstile
-    const token = grecaptcha.getResponse(turnstileWidgetId);
-    
-    if (!token) {
-      alert('Verificação expirada. Por favor, complete novamente.');
-      return;
-    }
-
-    // Aqui você deve enviar o token para seu servidor para validação
-    // POST https://challenges.cloudflare.com/turnstile/v0/siteverify
-    // com FormData ou JSON: { secret: 'SEU_SECRET_KEY', response: token }
-    
-    // Simulação de validação (em produção, faça no servidor)
+    if (!discordClicked) return;
     localStorage.setItem('wl_auth', '1');
     openSite(true);
   };
