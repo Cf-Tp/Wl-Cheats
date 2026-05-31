@@ -209,11 +209,9 @@
         document.getElementById('rayId').innerText = generateRayId();
 
         let captchaOk = false;
-        let turnstileToken = '';
 
         window.onTurnstileSuccess = function(token) {
             captchaOk = true;
-            turnstileToken = token;
             
             document.getElementById('status2').innerHTML = '<span>✓</span> Verificação concluída! Clique em "Acessar o site"';
             document.getElementById('status2').classList.remove('loading');
@@ -231,8 +229,9 @@
                 return;
             }
             
-            // Vai direto pro conteúdo (SEM COOKIE)
-            window.location.href = '/wl';
+            // Vai pro wl com um token temporário na URL
+            const token = Date.now();
+            window.location.href = '/wl?verify=' + token;
         };
     </script>
 </body>
