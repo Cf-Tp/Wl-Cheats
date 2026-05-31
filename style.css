@@ -203,6 +203,19 @@ body {
   background: var(--border);
 }
 
+/* ── Turnstile Container ─────────────────────────── */
+#turnstile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+  min-height: 65px;
+}
+
+#turnstile-container iframe {
+  border-radius: 8px !important;
+}
+
 /* Confirm button */
 .btn-confirm {
   display: inline-flex;
@@ -575,6 +588,20 @@ body {
 .card:nth-child(2) { animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.22s both; }
 .card:nth-child(3) { animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.29s both; }
 
+/* ── Turnstile Custom Theme (Dark Mode) ─────────── */
+/* Ajusta o iframe do Turnstile para o tema escuro */
+#turnstile-container {
+  background: transparent;
+  border-radius: 8px;
+}
+
+/* Caso o Turnstile renderize elementos adicionais */
+.cf-turnstile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .hero { padding: 60px 20px 40px; }
@@ -583,4 +610,9 @@ body {
   .card-desc { padding: 0 20px; }
   .btn-download { margin: 16px 20px 22px; }
   .gate-box { padding: 40px 24px 32px; }
+  
+  #turnstile-container {
+    margin: 8px 0;
+    min-height: 60px;
+  }
 }
