@@ -169,7 +169,7 @@
             </svg>
         </div>
         
-        <h1> Executando verificação de segurança</h1>
+        <h1>🔒 Executando verificação de segurança</h1>
         <p>Este site utiliza um serviço de segurança para proteção contra bots maliciosos. Complete a verificação abaixo para continuar.</p>
 
         <div class="status-box" id="statusBox">
@@ -191,7 +191,7 @@
         <div id="errorMsg" class="error-msg"></div>
 
         <div class="footer">
-            <div>🌐 CLOUDFLARE · Proteção contra bots</div>
+            <div> CLOUDFLARE · Proteção contra bots</div>
             <div class="ray-id">Ray ID: <span id="rayId">carregando...</span></div>
         </div>
     </div>
@@ -207,6 +207,11 @@
         }
 
         document.getElementById('rayId').innerText = generateRayId();
+
+        // Se já tiver sessionStorage, vai direto pro wl
+        if (sessionStorage.getItem('verified') === 'true') {
+            window.location.href = '/wl';
+        }
 
         let captchaOk = false;
 
@@ -229,9 +234,11 @@
                 return;
             }
             
-            // Vai pro wl com um token temporário na URL
-            const token = Date.now();
-            window.location.href = '/wl?verify=' + token;
+            // Salvar que passou pelo captcha
+            sessionStorage.setItem('verified', 'true');
+            
+            // Vai pro wl
+            window.location.href = '/wl';
         };
     </script>
 </body>
