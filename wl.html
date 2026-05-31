@@ -343,9 +343,7 @@
     }
     
     // Se tiver, remove o parâmetro da URL (para não ficar mostrando)
-    // e mantém o usuário na página
     if (verifyToken) {
-        // Limpa o parâmetro da URL sem recarregar a página
         window.history.replaceState({}, document.title, '/wl');
     }
 
