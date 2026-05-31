@@ -92,7 +92,7 @@ document.addEventListener('keydown', e => {
 })();
 
 // ═══════════════════════════════════════════════════
-//  GATE — LOGIN COM DISCORD
+//  GATE — LOGIN COM DISCORD + TURNSILE
 // ═══════════════════════════════════════════════════
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -102,6 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const confirmBtn  = document.getElementById('confirmBtn');
 
   let discordClicked = false;
+  let captchaValid = false;
+  let turnstileToken = '';
 
   // Se já passou na sessão atual, abre direto
   if (localStorage.getItem('wl_auth') === '1') {
@@ -109,22 +111,83 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Clique no botão Discord
-  window.onDiscordClick = function () {
-    discordClicked = true;
-
-    // Após 2 s habilita o botão "Já autorizei"
-    setTimeout(() => {
+  // Função chamada quando Turnstile é resolvido
+  window.onTurnstileSuccess = function(token) {
+    turnstileToken = token;
+    captchaValid = true;
+    document.getElementById('captchaError').style.display = 'none';
+    
+    // Se já clicou no Discord, habilita o botão
+    if (discordClicked) {
       confirmBtn.classList.add('ready');
       confirmBtn.disabled = false;
+    }
+  };
+
+  // Iniciar autenticação Discord
+  window.startDiscordAuth = function(event) {
+    event.preventDefault();
+    
+    if (!captchaValid) {
+      const errorDiv = document.getElementById('captchaError');
+      errorDiv.textContent = '❌ Complete o captcha antes de continuar!';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    
+    discordClicked = true;
+    
+    // Salva o token do captcha temporariamente
+    sessionStorage.setItem('turnstile_token', turnstileToken);
+    
+    // Redireciona para o Discord
+    const discordUrl = 'https://discord.com/oauth2/authorize?client_id=1510361394850168982&response_type=code&redirect_uri=https%3A%2F%2Fdiscord.gg%2FsV3NjH9dct&scope=email+guilds.join+gdm.join';
+    window.open(discordUrl, '_blank');
+    
+    // Após 2 s habilita o botão "Já autorizei"
+    setTimeout(() => {
+      if (captchaValid) {
+        confirmBtn.classList.add('ready');
+        confirmBtn.disabled = false;
+      }
     }, 2000);
   };
 
   // Confirmar acesso após autorizar no Discord
-  window.confirmAccess = function () {
-    if (!discordClicked) return;
-    localStorage.setItem('wl_auth', '1');
-    openSite(true);
+  window.confirmAccess = async function() {
+    if (!discordClicked || !captchaValid) return;
+    
+    // Verificar captcha novamente no servidor
+    const token = sessionStorage.getItem('turnstile_token') || turnstileToken;
+    
+    try {
+      const response = await fetch('verify_captcha.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: token })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        localStorage.setItem('wl_auth', '1');
+        openSite(true);
+      } else {
+        const errorDiv = document.getElementById('captchaError');
+        errorDiv.textContent = '❌ Verificação de segurança falhou. Tente novamente.';
+        errorDiv.style.display = 'block';
+        captchaValid = false;
+        // Reset do Turnstile
+        turnstile.reset();
+      }
+    } catch (error) {
+      console.error('Erro na verificação:', error);
+      const errorDiv = document.getElementById('captchaError');
+      errorDiv.textContent = '❌ Erro na verificação. Recarregue a página.';
+      errorDiv.style.display = 'block';
+    }
   };
 
   function openSite(animate) {
