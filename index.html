@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WL-Cheats</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Cloudflare Turnstile -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  
+  <!-- Cloudflare Turnstile em modo compatibilidade reCAPTCHA -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?compat=recaptcha" async defer></script>
+  
 </head>
 <body>
 
@@ -28,18 +30,12 @@
         Entrar com Discord
       </a>
 
-      <!-- Seção de verificação (inicialmente oculta) -->
+      <!-- Seção de confirmação (inicialmente oculta) -->
       <div class="gate-confirm" id="gateConfirm" style="display: none;">
-        <div class="gate-divider"><span>Após autorizar no Discord</span></div>
+        <div class="gate-divider"><span>Verificação de segurança</span></div>
         
-        <!-- Cloudflare Turnstile Widget -->
-        <div class="cf-turnstile" 
-             data-sitekey="0x4AAAAAADbni3_CIJMk_A6S" 
-             data-callback="onTurnstileSuccess" 
-             data-expired-callback="onTurnstileExpired" 
-             data-error-callback="onTurnstileError" 
-             style="display: flex; justify-content: center; margin: 15px 0;">
-        </div>
+        <!-- Container do Turnstile (será renderizado via grecaptcha.render) -->
+        <div id="turnstile-container" style="display: flex; justify-content: center; margin: 15px 0;"></div>
         
         <button class="btn-confirm" id="confirmBtn" onclick="confirmAccess()" disabled>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -171,5 +167,6 @@
   </div>
 
   <script src="script.js"></script>
+  
 </body>
 </html>
