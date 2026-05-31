@@ -191,7 +191,7 @@
         <div id="errorMsg" class="error-msg"></div>
 
         <div class="footer">
-            <div> CLOUDFLARE · Proteção contra bots</div>
+            <div>🌐 CLOUDFLARE · Proteção contra bots</div>
             <div class="ray-id">Ray ID: <span id="rayId">carregando...</span></div>
         </div>
     </div>
@@ -208,6 +208,17 @@
 
         document.getElementById('rayId').innerText = generateRayId();
 
+        // Verificar URL se veio com token
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessToken = urlParams.get('access');
+        
+        // Se tiver token na URL, salva no sessionStorage e limpa URL
+        if (accessToken === 'granted') {
+            sessionStorage.setItem('verified', 'true');
+            // Limpa o parâmetro da URL
+            window.history.replaceState({}, document.title, '/');
+        }
+        
         // Se já tiver sessionStorage, vai direto pro wl
         if (sessionStorage.getItem('verified') === 'true') {
             window.location.href = '/wl';
@@ -234,11 +245,8 @@
                 return;
             }
             
-            // Salvar que passou pelo captcha
-            sessionStorage.setItem('verified', 'true');
-            
-            // Vai pro wl
-            window.location.href = '/wl';
+            // Vai pro wl com token na URL
+            window.location.href = '/wl?access=granted';
         };
     </script>
 </body>
