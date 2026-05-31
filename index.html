@@ -169,7 +169,7 @@
             </svg>
         </div>
         
-        <h1>🔒 Executando verificação de segurança</h1>
+        <h1> Executando verificação de segurança</h1>
         <p>Este site utiliza um serviço de segurança para proteção contra bots maliciosos. Complete a verificação abaixo para continuar.</p>
 
         <div class="status-box" id="statusBox">
@@ -181,9 +181,8 @@
             </div>
         </div>
 
-        <!-- Cloudflare Turnstile -->
         <div class="cf-turnstile" 
-             data-sitekey="1x00000000000000000000AA"
+             data-sitekey="0x4AAAAAADbp--rW5yC5rrXX"
              data-callback="onTurnstileSuccess"
              data-theme="dark">
         </div>
@@ -198,7 +197,10 @@
     </div>
 
     <script>
-        // FUNÇÃO PARA CRIAR COOKIE DE 30 DIAS
+        // ==============================================
+        // PROTEÇÃO DA PÁGINA re.html
+        // ==============================================
+        
         function setCookie(name, value, days) {
             const date = new Date();
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -217,6 +219,10 @@
             return null;
         }
 
+        function deleteCookie(name) {
+            document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
         // Gerar Ray ID fake
         function generateRayId() {
             const chars = 'abcdef0123456789';
@@ -229,11 +235,32 @@
 
         document.getElementById('rayId').innerText = generateRayId();
 
-        // VERIFICAR COOKIE - SE JÁ VERIFICADO, VAI DIRETO PRO SITE
+        // VERIFICAR SE JÁ TEM COOKIE - SE TIVER, VAI DIRETO PRO SITE
         const verified = getCookie('wl_verified');
         if (verified === 'true') {
             window.location.href = '/wl';
         }
+
+        // PREVENIR RECARREGAMENTO RÁPIDO (anti-bot)
+        let lastVisit = getCookie('wl_last_visit');
+        const now = Date.now();
+        
+        if (lastVisit) {
+            const timeDiff = now - parseInt(lastVisit);
+            // Se tentou acessar a página de verificação mais de 5 vezes em 1 minuto
+            let attempts = parseInt(getCookie('wl_attempts') || '0');
+            if (timeDiff < 60000) {
+                attempts++;
+                setCookie('wl_attempts', attempts, 0.004); // 5 minutos
+                if (attempts > 5) {
+                    document.body.innerHTML = '<div style="color:white;text-align:center;margin-top:50px;"><h1>⛔ Muitas tentativas</h1><p>Aguarde alguns minutos antes de tentar novamente.</p></div>';
+                    throw new Error("Muitas tentativas");
+                }
+            } else {
+                setCookie('wl_attempts', '0', 0.004);
+            }
+        }
+        setCookie('wl_last_visit', now.toString(), 0.004);
 
         let captchaOk = false;
         let turnstileToken = '';
@@ -243,12 +270,10 @@
             captchaOk = true;
             turnstileToken = token;
             
-            // Atualizar status
             document.getElementById('status2').innerHTML = '<span>✓</span> Verificação concluída! Clique em "Acessar o site"';
             document.getElementById('status2').classList.remove('loading');
             document.getElementById('status2').classList.add('done');
             
-            // Ativar botão
             const btn = document.getElementById('verifyBtn');
             btn.disabled = false;
             btn.classList.add('active');
@@ -265,6 +290,8 @@
             // CRIAR COOKIE DE 30 DIAS
             setCookie('wl_verified', 'true', 30);
             setCookie('wl_token', turnstileToken, 30);
+            deleteCookie('wl_attempts');
+            deleteCookie('wl_last_visit');
             
             // Redirecionar para o conteúdo
             window.location.href = '/wl';
