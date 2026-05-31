@@ -330,21 +330,23 @@
 
   <script>
     // ==============================================
-    // REDIRECIONAMENTO - SEMPRE VOLTA PRO CAPTCHA
+    // VERIFICAÇÃO - SÓ DEIXA PASSAR SE TIVER PARÂMETRO
     // ==============================================
     
-    // SEMPRE que a página wl for carregada, volta pro captcha
-    // PORÉM, se veio do re (com um parâmetro ou sessionStorage), deixa passar
+    // Pegar parâmetro da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const verifyToken = urlParams.get('verify');
     
-    // Verificar se veio do captcha
-    const fromCaptcha = sessionStorage.getItem('from_captcha');
-    
-    if (!fromCaptcha) {
-        // Não veio do captcha, redireciona
+    // Se NÃO tiver o parâmetro 'verify', volta pro captcha
+    if (!verifyToken) {
         window.location.href = '/re';
-    } else {
-        // Veio do captcha, limpa e mostra o conteúdo
-        sessionStorage.removeItem('from_captcha');
+    }
+    
+    // Se tiver, remove o parâmetro da URL (para não ficar mostrando)
+    // e mantém o usuário na página
+    if (verifyToken) {
+        // Limpa o parâmetro da URL sem recarregar a página
+        window.history.replaceState({}, document.title, '/wl');
     }
 
     // ==============================================
