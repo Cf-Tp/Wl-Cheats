@@ -93,14 +93,16 @@ document.addEventListener('keydown', e => {
 
 // ═══════════════════════════════════════════════════
 //  GATE — LOGIN COM DISCORD + CLOUDFLARE TURNSTILE
+//  (modo compatibilidade reCAPTCHA)
 // ═══════════════════════════════════════════════════
 
-// Variável global para controle do Turnstile
-let turnstileVerified = false;
+// Variáveis globais de controle
+let turnstileToken = null;
+let turnstileWidgetId = null;
 
-// Callbacks do Cloudflare Turnstile
+// Callback executado quando o Turnstile é resolvido com sucesso
 function onTurnstileSuccess(token) {
-  turnstileVerified = true;
+  turnstileToken = token;
   const confirmBtn = document.getElementById('confirmBtn');
   if (confirmBtn) {
     confirmBtn.disabled = false;
@@ -108,8 +110,9 @@ function onTurnstileSuccess(token) {
   }
 }
 
+// Callback executado quando o token expira
 function onTurnstileExpired() {
-  turnstileVerified = false;
+  turnstileToken = null;
   const confirmBtn = document.getElementById('confirmBtn');
   if (confirmBtn) {
     confirmBtn.disabled = true;
@@ -117,14 +120,10 @@ function onTurnstileExpired() {
   }
 }
 
+// Callback executado em caso de erro
 function onTurnstileError() {
-  turnstileVerified = false;
-  const confirmBtn = document.getElementById('confirmBtn');
-  if (confirmBtn) {
-    confirmBtn.disabled = true;
-    confirmBtn.classList.remove('ready');
-  }
-  alert('Erro na verificação de segurança. Tente novamente.');
+  turnstileToken = null;
+  alert('Erro na verificação de segurança. Recarregue a página e tente novamente.');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -145,57 +144,59 @@ document.addEventListener('DOMContentLoaded', () => {
   window.onDiscordClick = function () {
     discordClicked = true;
 
-    // Mostra a seção de confirmação com o Turnstile
     const gateConfirm = document.getElementById('gateConfirm');
     if (gateConfirm) {
       gateConfirm.style.display = 'block';
     }
 
-    // Recarrega o widget do Turnstile se necessário
-    if (typeof turnstile !== 'undefined') {
-      setTimeout(() => {
-        turnstile.reset();
-      }, 100);
-    }
+    // Renderiza o Turnstile usando a API de compatibilidade reCAPTCHA
+    // Aguarda um pequeno delay para garantir que o container esteja visível
+    setTimeout(() => {
+      if (typeof grecaptcha !== 'undefined') {
+        // Se já existe um widget, reseta
+        if (turnstileWidgetId !== null) {
+          grecaptcha.reset(turnstileWidgetId);
+        } else {
+          // Renderiza o widget Turnstile
+          turnstileWidgetId = grecaptcha.render('turnstile-container', {
+            sitekey: '0x4AAAAAADbni3_CIJMk_A6S',
+            callback: onTurnstileSuccess,
+            'expired-callback': onTurnstileExpired,
+            'error-callback': onTurnstileError,
+            theme: 'dark'
+          });
+        }
+      } else {
+        console.error('Turnstile (grecaptcha) não está disponível');
+      }
+    }, 300);
   };
 
-  // Confirmar acesso após autorizar no Discord E verificar Turnstile
+  // Confirmar acesso
   window.confirmAccess = function () {
     if (!discordClicked) {
       alert('Por favor, clique primeiro no botão do Discord para autorizar.');
       return;
     }
 
-    if (!turnstileVerified) {
-      alert('Por favor, complete a verificação de segurança do Cloudflare primeiro.');
+    if (!turnstileToken) {
+      alert('Por favor, complete a verificação de segurança do Turnstile.');
       return;
     }
 
-    // Verifica se o token do Turnstile ainda é válido
-    if (typeof turnstile !== 'undefined') {
-      const token = turnstile.getResponse();
-      if (!token) {
-        alert('Verificação de segurança expirada. Por favor, complete novamente.');
-        return;
-      }
-      
-      // Aqui você pode enviar o token para seu servidor para validação adicional
-      // Exemplo: enviar token via fetch para seu backend
-      /*
-      fetch('/verify-turnstile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: token })
-      }).then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            localStorage.setItem('wl_auth', '1');
-            openSite(true);
-          }
-        });
-      */
+    // Obtém o token do Turnstile
+    const token = grecaptcha.getResponse(turnstileWidgetId);
+    
+    if (!token) {
+      alert('Verificação expirada. Por favor, complete novamente.');
+      return;
     }
 
+    // Aqui você deve enviar o token para seu servidor para validação
+    // POST https://challenges.cloudflare.com/turnstile/v0/siteverify
+    // com FormData ou JSON: { secret: 'SEU_SECRET_KEY', response: token }
+    
+    // Simulação de validação (em produção, faça no servidor)
     localStorage.setItem('wl_auth', '1');
     openSite(true);
   };
