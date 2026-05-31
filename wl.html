@@ -329,15 +329,20 @@
   </div>
 
   <script>
-    // ==============================================
-    // VERIFICAÇÃO - SE NÃO VEIO DO CAPTCHA, VOLTA PRA RAIZ
-    // ==============================================
-    
-    // Verificar se passou pelo captcha
-    const verified = sessionStorage.getItem('verified');
-    
-    // Se NÃO tiver, volta pra raiz (captcha)
-    if (!verified || verified !== 'true') {
+    // Funções de Cookie
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.startsWith(name + "=")) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+
+    // VERIFICAR COOKIE - SE NÃO TIVER, VOLTA PRO CAPTCHA
+    if (getCookie('wl_verified') !== 'true') {
         window.location.href = '/';
     }
 
