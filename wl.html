@@ -330,21 +330,15 @@
 
   <script>
     // ==============================================
-    // VERIFICAÇÃO - SÓ DEIXA PASSAR SE TIVER PARÂMETRO
+    // VERIFICAÇÃO - SÓ DEIXA PASSAR SE VEIO DO CAPTCHA
     // ==============================================
     
-    // Pegar parâmetro da URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const verifyToken = urlParams.get('verify');
+    // Verificar se passou pelo captcha (sessionStorage)
+    const verified = sessionStorage.getItem('verified');
     
-    // Se NÃO tiver o parâmetro 'verify', volta pro captcha
-    if (!verifyToken) {
-        window.location.href = '';
-    }
-    
-    // Se tiver, remove o parâmetro da URL (para não ficar mostrando)
-    if (verifyToken) {
-        window.history.replaceState({}, document.title, '/wl');
+    // Se NÃO tiver, volta pra raiz (captcha)
+    if (!verified || verified !== 'true') {
+        window.location.href = '/';
     }
 
     // ==============================================
