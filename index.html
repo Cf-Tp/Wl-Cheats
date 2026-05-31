@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WL-Cheats</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -24,6 +25,10 @@
 
       <div class="gate-confirm" id="gateConfirm">
         <div class="gate-divider"><span>Após autorizar no Discord</span></div>
+        
+        <!-- Cloudflare Turnstile Widget -->
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAADbnJyqA168fXdy2" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError" style="display: flex; justify-content: center; margin: 15px 0;"></div>
+        
         <button class="btn-confirm" id="confirmBtn" onclick="confirmAccess()" disabled>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="20 6 9 17 4 12"/>
@@ -154,5 +159,46 @@
   </div>
 
   <script src="script.js"></script>
+  <script>
+    // Cloudflare Turnstile callback functions
+    let turnstileVerified = false;
+    
+    function onTurnstileSuccess(token) {
+      console.log('Turnstile verification successful');
+      turnstileVerified = true;
+      document.getElementById('confirmBtn').disabled = false;
+    }
+    
+    function onTurnstileExpired() {
+      console.log('Turnstile verification expired');
+      turnstileVerified = false;
+      document.getElementById('confirmBtn').disabled = true;
+    }
+    
+    function onTurnstileError() {
+      console.log('Turnstile verification error');
+      turnstileVerified = false;
+      document.getElementById('confirmBtn').disabled = true;
+    }
+    
+    // Modified confirmAccess function to check Turnstile
+    function confirmAccess() {
+      if (!turnstileVerified) {
+        alert('Por favor, complete a verificação de segurança primeiro.');
+        return;
+      }
+      
+      // Here you would typically verify the Discord authentication
+      // For now, we'll just hide the gate
+      document.getElementById('gateOverlay').style.display = 'none';
+      document.getElementById('siteContent').style.display = 'block';
+    }
+    
+    // Discord click handler
+    function onDiscordClick() {
+      // Show the Turnstile verification after Discord authorization
+      document.getElementById('gateConfirm').style.display = 'block';
+    }
+  </script>
 </body>
 </html>
