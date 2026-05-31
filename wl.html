@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WL-Cheats</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0a0c10;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: #f1f1f3;
+      overflow-x: hidden;
+    }
+
+    .bg-glow {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 80vw;
+      height: 80vh;
+      background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, rgba(10, 12, 16, 0) 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 0;
+      transition: transform 0.08s ease-out;
+    }
+
+    .site-content {
+      display: block;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #a5b4fc);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .logo span {
+      background: linear-gradient(135deg, #8b5cf6, #c084fc);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .search-wrapper {
+      max-width: 500px;
+      margin: 1rem auto 2rem;
+    }
+
+    .search-box {
+      background: #11131b;
+      border: 1px solid #1f2230;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0.6rem 1.2rem;
+      gap: 8px;
+      transition: 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+
+    .search-icon {
+      width: 20px;
+      color: #6b7280;
+    }
+
+    #searchInput {
+      background: transparent;
+      border: none;
+      width: 100%;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .card {
+      background: #11131b;
+      border: 1px solid #1f2230;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      transition: all 0.25s;
+    }
+
+    .card:hover {
+      border-color: #2d2f3e;
+    }
+
+    .card-header {
+      padding: 1.2rem 1.4rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    .card-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .card-arrow {
+      transition: transform 0.2s;
+    }
+
+    .card.expanded .card-arrow {
+      transform: rotate(180deg);
+    }
+
+    .card-body {
+      padding: 0 1.4rem 0 1.4rem;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .card.expanded .card-body {
+      padding: 0 1.4rem 1.2rem 1.4rem;
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    .card-desc {
+      color: #9ca3af;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #8b5cf6;
+      padding: 8px 16px;
+      border-radius: 40px;
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      font-size: 0.8rem;
+      transition: 0.2s;
+    }
+
+    .btn-download:hover {
+      background: #7c3aed;
+    }
+
+    .no-results {
+      text-align: center;
+      color: #6b7280;
+      padding: 2rem;
+      display: none;
+    }
+
+    .no-results.visible {
+      display: block;
+    }
+
+    .card.hidden {
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: #4b5563;
+      font-size: 0.75rem;
+      border-top: 1px solid #1f2230;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-content" id="siteContent">
+    <div class="bg-glow"></div>
+
+    <header class="hero">
+      <div class="hero-inner">
+        <h1 class="logo">WL<span>-</span>Cheats</h1>
+        <p class="subtitle"></p>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="search-wrapper">
+        <div class="search-box">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search software..." autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="cards-grid" id="cardsGrid">
+        <div class="card" data-name="madium">
+          <div class="card-header">
+            <div class="card-title-row">
+              <div class="card-dot"></div>
+              <h2 class="card-name">Madium</h2>
+            </div>
+            <div class="card-arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-desc">Muito bom baixe esse aqui porra</p>
+            <a class="btn-download" href="https://cdn.discordapp.com/attachments/1499041390892552213/1510408932638720060/Madium.rar?ex=6a1cb56f&is=6a1b63ef&hm=891f8081462b03affb6282e4838ad431cd218ba24ca6a37b5e4fdf8edfd65e92&" target="_blank" rel="noopener">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download
+            </a>
+          </div>
+        </div>
+
+        <div class="card" data-name="velocity">
+          <div class="card-header">
+            <div class="card-title-row">
+              <div class="card-dot"></div>
+              <h2 class="card-name">Velocity</h2>
+            </div>
+            <div class="card-arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-desc">Uma bosta meio bugadinho mais e mt bom</p>
+            <a class="btn-download" href="https://work.ink/1Yct/velocitydownload" target="_blank" rel="noopener">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download
+            </a>
+          </div>
+        </div>
+
+        <div class="card" data-name="real">
+          <div class="card-header">
+            <div class="card-title-row">
+              <div class="card-dot"></div>
+              <h2 class="card-name">Real</h2>
+            </div>
+            <div class="card-arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-desc">Esse aqui baixe esse aqui e muito bom mesmo meu querido</p>
+            <a class="btn-download" href="https://www.projectreal.net/" target="_blank" rel="noopener">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-results" id="noResults">No software found.</div>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2026 WL-Cheats. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    // ==============================================
+    // PROTEÇÃO DA PÁGINA wl.html
+    // ==============================================
+    
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.startsWith(name + "=")) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+
+    // Verificar se tem o cookie de verificação
+    const verified = getCookie('wl_verified');
+    
+    if (verified !== 'true') {
+        // Não tem cookie, volta pro captcha
+        window.location.href = '/re';
+    }
+
+    // ==============================================
+    // SITE — lógica dos cards e pesquisa
+    // ==============================================
+
+    (function initSite() {
+      const searchInput = document.getElementById('searchInput');
+      const cardsGrid = document.getElementById('cardsGrid');
+      const noResults = document.getElementById('noResults');
+      if (!cardsGrid) return;
+
+      const cards = Array.from(cardsGrid.querySelectorAll('.card'));
+
+      window.toggleCard = function (header) {
+        const card = header.closest('.card');
+        const isExpanded = card.classList.contains('expanded');
+        cards.forEach(c => { if (c !== card) c.classList.remove('expanded'); });
+        card.classList.toggle('expanded', !isExpanded);
+      };
+
+      document.querySelectorAll('.card-header').forEach(header => {
+        header.onclick = function() {
+          const card = this.closest('.card');
+          const isExpanded = card.classList.contains('expanded');
+          cards.forEach(c => { if (c !== card) c.classList.remove('expanded'); });
+          card.classList.toggle('expanded', !isExpanded);
+        };
+      });
+
+      searchInput.addEventListener('input', () => {
+        const q = searchInput.value.trim().toLowerCase();
+        let visible = 0;
+
+        cards.forEach(card => {
+          const name = card.dataset.name || '';
+          const desc = card.querySelector('.card-desc')?.textContent.toLowerCase() || '';
+          const match = !q || name.includes(q) || desc.includes(q);
+
+          card.classList.toggle('hidden', !match);
+          if (!match) card.classList.remove('expanded');
+          if (match) visible++;
+        });
+
+        noResults.classList.toggle('visible', visible === 0 && q.length > 0);
+      });
+
+      document.querySelectorAll('.btn-download').forEach(btn => {
+        btn.addEventListener('click', e => e.stopPropagation());
+      });
+
+      const bgGlow = document.querySelector('.bg-glow');
+      document.addEventListener('mousemove', e => {
+        if (!bgGlow) return;
+        const x = (e.clientX / window.innerWidth - 0.5) * 30;
+        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+        bgGlow.style.transform = `translateX(calc(-50% + ${x}px)) translateY(${y}px)`;
+      });
+    })();
+  </script>
+</body>
+</html>
