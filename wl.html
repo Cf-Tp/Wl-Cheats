@@ -330,10 +330,10 @@
 
   <script>
     // ==============================================
-    // VERIFICAÇÃO - SÓ DEIXA PASSAR SE VEIO DO CAPTCHA
+    // VERIFICAÇÃO - SE NÃO VEIO DO CAPTCHA, VOLTA PRA RAIZ
     // ==============================================
     
-    // Verificar se passou pelo captcha (sessionStorage)
+    // Verificar se passou pelo captcha
     const verified = sessionStorage.getItem('verified');
     
     // Se NÃO tiver, volta pra raiz (captcha)
