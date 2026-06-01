@@ -5,11 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WL-Cheats</title>
   
-  <!-- FORÇA NUNCA GUARDAR CACHE DA PÁGINA -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  
   <style>
     * {
       margin: 0;
@@ -334,31 +329,23 @@
   </div>
 
   <script>
-    // ==============================================
-    // DELETA O COOKIE DO CLOUDFLARE
-    // ==============================================
-    
-    function deletarCookieCloudflare() {
-        // Deleta o cookie cf_clearance do Cloudflare
-        document.cookie = "cf_clearance=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.wlxits.dpdns.org";
-        document.cookie = "cf_clearance=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-        console.log("Cookie cf_clearance deletado!");
-    }
-    
-    function getCookie(nome) {
+    // Funções de Cookie
+    function getCookie(name) {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             let cookie = cookies[i].trim();
-            if (cookie.startsWith(nome + "=")) {
-                return cookie.substring(nome.length + 1);
+            if (cookie.startsWith(name + "=")) {
+                return cookie.substring(name.length + 1);
             }
         }
         return null;
     }
-    
-    // DELETA O COOKIE DO CLOUDFLARE QUANDO A PÁGINA CARREGAR
-    deletarCookieCloudflare();
-    
+
+    // VERIFICAR COOKIE - SE NÃO TIVER, VOLTA PRO CAPTCHA
+    if (getCookie('wl_verified') !== 'true') {
+        window.location.href = '/';
+    }
+
     // ==============================================
     // SITE — lógica dos cards e pesquisa
     // ==============================================
