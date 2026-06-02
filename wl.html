@@ -3,13 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WL-Cheats | Painel</title>
-    
-    <!-- Impedir cache -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    
+    <title>WL-Cheats</title>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         * {
             margin: 0;
@@ -18,15 +13,85 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #1a0b2e 100%);
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            background: #0a0c10;
             min-height: 100vh;
-            color: #fff;
-            overflow-x: hidden;
-            position: relative;
         }
 
-        /* Efeito de neve */
+        .captcha-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0c10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.5s;
+        }
+
+        .captcha-card {
+            background: #12141c;
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid #2a2d3a;
+        }
+
+        .captcha-card h1 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .captcha-card p {
+            color: #9ca3af;
+            margin-bottom: 20px;
+        }
+
+        .cf-turnstile {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .btn-captcha {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.5;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .btn-captcha.active {
+            opacity: 1;
+        }
+
+        .btn-captcha.active:hover {
+            transform: scale(0.98);
+        }
+
+        .main-screen {
+            display: none;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #1a0b2e 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .main-screen.show {
+            display: block;
+        }
+
         .snow {
             position: fixed;
             top: 0;
@@ -41,14 +106,13 @@
             position: absolute;
             background: white;
             border-radius: 50%;
-            opacity: 0.8;
             animation: fall linear infinite;
-            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+            top: -10px;
         }
 
         @keyframes fall {
             0% {
-                transform: translateY(-10vh) rotate(0deg);
+                transform: translateY(0) rotate(0deg);
                 opacity: 0.8;
             }
             100% {
@@ -57,7 +121,6 @@
             }
         }
 
-        /* Brilho de fundo */
         .glow {
             position: fixed;
             top: 50%;
@@ -70,7 +133,6 @@
             z-index: 0;
         }
 
-        /* Conteúdo principal */
         .content {
             position: relative;
             z-index: 2;
@@ -82,11 +144,9 @@
             flex-direction: column;
         }
 
-        /* Header */
         .header {
             text-align: center;
             padding: 2rem 0 1rem;
-            animation: fadeInDown 0.8s ease;
         }
 
         .logo {
@@ -97,7 +157,6 @@
             -webkit-background-clip: text;
             color: transparent;
             letter-spacing: -1px;
-            text-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
         }
 
         .logo span {
@@ -114,11 +173,9 @@
             letter-spacing: 2px;
         }
 
-        /* Barra de pesquisa */
         .search-wrapper {
             max-width: 500px;
             margin: 2rem auto;
-            animation: fadeInUp 0.8s ease;
         }
 
         .search-box {
@@ -136,7 +193,6 @@
         .search-box:focus-within {
             border-color: #8b5cf6;
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-            transform: scale(1.02);
         }
 
         .search-icon {
@@ -158,13 +214,11 @@
             color: #7e6b9e;
         }
 
-        /* Cards */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1.8rem;
             margin: 2rem 0;
-            animation: fadeInUp 0.8s ease 0.2s backwards;
         }
 
         .card {
@@ -173,8 +227,8 @@
             border: 1px solid rgba(139, 92, 246, 0.3);
             border-radius: 1.5rem;
             overflow: hidden;
-            transition: all 0.3s;
             cursor: pointer;
+            transition: all 0.3s;
         }
 
         .card:hover {
@@ -219,6 +273,7 @@
         .card-arrow {
             transition: transform 0.3s;
             color: #c084fc;
+            font-size: 1.2rem;
         }
 
         .card.expanded .card-arrow {
@@ -257,9 +312,9 @@
             color: white;
             font-weight: 600;
             font-size: 0.8rem;
-            transition: all 0.2s;
             border: none;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .btn-download:hover {
@@ -282,7 +337,6 @@
             display: none;
         }
 
-        /* Footer */
         .footer {
             text-align: center;
             padding: 2rem;
@@ -292,190 +346,165 @@
             margin-top: auto;
         }
 
-        /* Animações */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Scrollbar personalizada */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1a0b2e;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #8b5cf6;
-            border-radius: 10px;
-        }
-
-        /* Status do usuário */
         .user-status {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            gap: 15px;
             margin-bottom: 20px;
-        }
-
-        .verified-badge {
-            background: linear-gradient(135deg, #10b981, #059669);
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
         .logout-btn {
             background: rgba(239, 68, 68, 0.2);
             border: 1px solid rgba(239, 68, 68, 0.5);
             color: #f87171;
-            padding: 5px 15px;
+            padding: 8px 18px;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
+            font-weight: 500;
             transition: all 0.2s;
         }
 
         .logout-btn:hover {
             background: rgba(239, 68, 68, 0.4);
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
     </style>
 </head>
 <body>
 
-<!-- Efeito de neve -->
-<div class="snow" id="snow"></div>
-<div class="glow"></div>
-
-<div class="content">
-    <div class="user-status">
-        <div class="verified-badge">
-            ✓ Verificado
+<div class="captcha-screen" id="captchaScreen">
+    <div class="captcha-card">
+        <h1>Verificação de segurança</h1>
+        <p>Complete a verificação abaixo para acessar o conteudo.</p>
+        <div class="cf-turnstile" 
+             data-sitekey="1x00000000000000000000AA" 
+             data-callback="onCaptchaSuccess" 
+             data-theme="dark">
         </div>
-        <button class="logout-btn" onclick="logout()">Sair</button>
+        <button class="btn-captcha" id="verifyBtn" disabled>Acessar o site</button>
     </div>
+</div>
 
-    <div class="header">
-        <h1 class="logo">WL<span>-</span>Cheats</h1>
-        <p class="subtitle"> O MELHOR EM CHEATS ✦</p>
-    </div>
+<div class="main-screen" id="mainScreen">
+    <div class="snow" id="snow"></div>
+    <div class="glow"></div>
 
-    <div class="search-wrapper">
-        <div class="search-box">
-            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <input type="text" id="searchInput" placeholder="Buscar software..." autocomplete="off" />
+    <div class="content">
+        <div class="user-status">
+            <button class="logout-btn" onclick="logout()">Sair</button>
         </div>
-    </div>
 
-    <div class="cards-grid" id="cardsGrid">
-        <div class="card" data-name="madium">
-            <div class="card-header">
-                <div class="card-title-row">
-                    <div class="card-icon"></div>
-                    <h2 class="card-name">Madium</h2>
+        <div class="header">
+            <h1 class="logo">WL<span>-</span>Cheats</h1>
+            <p class="subtitle">O MELHOR EM CHEATS</p>
+        </div>
+
+        <div class="search-wrapper">
+            <div class="search-box">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Buscar software..." autocomplete="off" />
+            </div>
+        </div>
+
+        <div class="cards-grid" id="cardsGrid">
+            <div class="card" data-name="madium">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <div class="card-icon"></div>
+                        <h2 class="card-name">Madium</h2>
+                    </div>
+                    <div class="card-arrow">▼</div>
                 </div>
-                <div class="card-arrow">▼</div>
-            </div>
-            <div class="card-body">
-                <p class="card-desc"> Muito bom, baixe esse aqui porra! .</p>
-                <a class="btn-download" href="#" target="_blank">
-                    📥 Download
-                </a>
-            </div>
-        </div>
-
-        <div class="card" data-name="velocity">
-            <div class="card-header">
-                <div class="card-title-row">
-                    <div class="card-icon"></div>
-                    <h2 class="card-name">Velocity</h2>
+                <div class="card-body">
+                    <p class="card-desc">Muito bom, baixe esse aqui porra!</p>
+                    <a class="btn-download" href="#">Download</a>
                 </div>
-                <div class="card-arrow">▼</div>
             </div>
-            <div class="card-body">
-                <p class="card-desc"> Uma bosta meio bugadinho mas é mt bom. </p>
-                <a class="btn-download" href="#" target="_blank">
-                    📥 Download
-                </a>
-            </div>
-        </div>
 
-        <div class="card" data-name="real">
-            <div class="card-header">
-                <div class="card-title-row">
-                    <div class="card-icon"></div>
-                    <h2 class="card-name">Real</h2>
+            <div class="card" data-name="velocity">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <div class="card-icon"></div>
+                        <h2 class="card-name">Velocity</h2>
+                    </div>
+                    <div class="card-arrow">▼</div>
                 </div>
-                <div class="card-arrow">▼</div>
+                <div class="card-body">
+                    <p class="card-desc">Uma bosta meio bugadinho mas e mt bom.</p>
+                    <a class="btn-download" href="#">Download</a>
+                </div>
             </div>
-            <div class="card-body">
-                <p class="card-desc"> Esse aqui é muito bom mesmo meu querido</p>
-                <a class="btn-download" href="#" target="_blank">
-                    📥 Download
-                </a>
+
+            <div class="card" data-name="real">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <div class="card-icon"></div>
+                        <h2 class="card-name">Real</h2>
+                    </div>
+                    <div class="card-arrow">▼</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-desc">Esse aqui baixe esse aqui e muito bom mesmo meu querido.</p>
+                    <a class="btn-download" href="#">Download</a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="no-results" id="noResults">❌ Nenhum software encontrado.</div>
+        <div class="no-results" id="noResults">Nenhum software encontrado.</div>
 
-    <div class="footer">
-        <p>© 2026 WL-Cheats. Todos os direitos reservados.</p>
+        <div class="footer">
+            <p>2026 WL-Cheats. Todos os direitos reservados.</p>
+        </div>
     </div>
 </div>
 
 <script>
-    // Verificar se veio do captcha
-    if (!sessionStorage.getItem('captcha_passed')) {
-        window.location.href = '/';
+    let captchaOk = false;
+    
+    function onCaptchaSuccess() {
+        captchaOk = true;
+        const btn = document.getElementById('verifyBtn');
+        btn.disabled = false;
+        btn.classList.add('active');
     }
-
-    // Função de logout
+    
+    document.getElementById('verifyBtn').onclick = function() {
+        if (captchaOk) {
+            sessionStorage.setItem('captcha_passed', 'true');
+            document.getElementById('captchaScreen').style.display = 'none';
+            document.getElementById('mainScreen').classList.add('show');
+            initSnow();
+            initSite();
+        }
+    };
+    
+    if (sessionStorage.getItem('captcha_passed') === 'true') {
+        document.getElementById('captchaScreen').style.display = 'none';
+        document.getElementById('mainScreen').classList.add('show');
+        initSnow();
+        initSite();
+    }
+    
     function logout() {
         sessionStorage.removeItem('captcha_passed');
-        window.location.href = '/';
+        window.location.reload();
     }
-
-    // ==============================================
-    // EFEITO DE NEVE
-    // ==============================================
-    function createSnow() {
+    
+    // NEVE - COMEÇA CAINDO IMEDIATAMENTE
+    function initSnow() {
         const snowContainer = document.getElementById('snow');
-        const snowCount = 120;
+        if (!snowContainer) return;
+        snowContainer.innerHTML = '';
         
-        for (let i = 0; i < snowCount; i++) {
+        for (let i = 0; i < 120; i++) {
             const snowflake = document.createElement('i');
             const size = Math.random() * 6 + 2;
             const left = Math.random() * 100;
-            const duration = Math.random() * 8 + 4;
-            const delay = Math.random() * 5;
+            const duration = Math.random() * 6 + 3;
+            const delay = Math.random() * 2;
             
             snowflake.style.cssText = `
                 left: ${left}%;
@@ -483,78 +512,72 @@
                 height: ${size}px;
                 animation-duration: ${duration}s;
                 animation-delay: ${delay}s;
-                opacity: ${Math.random() * 0.6 + 0.2};
+                opacity: ${Math.random() * 0.6 + 0.3};
+                top: -${Math.random() * 100}px;
             `;
-            
             snowContainer.appendChild(snowflake);
         }
     }
     
-    createSnow();
-
-    // ==============================================
-    // LÓGICA DOS CARDS E PESQUISA
-    // ==============================================
-    
-    const cards = document.querySelectorAll('.card');
-    const searchInput = document.getElementById('searchInput');
-    const noResults = document.getElementById('noResults');
-
-    // Toggle dos cards
-    document.querySelectorAll('.card-header').forEach(header => {
-        header.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const card = this.closest('.card');
-            const isExpanded = card.classList.contains('expanded');
+    function initSite() {
+        const cards = document.querySelectorAll('.card');
+        const searchInput = document.getElementById('searchInput');
+        const noResults = document.getElementById('noResults');
+        
+        document.querySelectorAll('.card-header').forEach(header => {
+            header.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const card = this.closest('.card');
+                const isExpanded = card.classList.contains('expanded');
+                
+                cards.forEach(c => {
+                    if (c !== card) c.classList.remove('expanded');
+                });
+                card.classList.toggle('expanded', !isExpanded);
+            });
+        });
+        
+        document.querySelectorAll('.btn-download').forEach(btn => {
+            btn.addEventListener('click', e => e.stopPropagation());
+        });
+        
+        function filterCards() {
+            const term = searchInput.value.toLowerCase();
+            let visible = 0;
             
-            // Fecha todos os outros
-            cards.forEach(c => {
-                if (c !== card) c.classList.remove('expanded');
+            cards.forEach(card => {
+                const name = card.dataset.name || '';
+                const desc = card.querySelector('.card-desc')?.textContent.toLowerCase() || '';
+                const match = term === '' || name.includes(term) || desc.includes(term);
+                
+                if (match) {
+                    card.classList.remove('hidden');
+                    visible++;
+                } else {
+                    card.classList.add('hidden');
+                    card.classList.remove('expanded');
+                }
             });
             
-            // Alterna o atual
-            card.classList.toggle('expanded', !isExpanded);
-        });
-    });
-
-    // Impedir clique no download de fechar o card
-    document.querySelectorAll('.btn-download').forEach(btn => {
-        btn.addEventListener('click', (e) => e.stopPropagation());
-    });
-
-    // Função de busca
-    function filterCards() {
-        const searchTerm = searchInput.value.toLowerCase();
-        let visibleCount = 0;
-
-        cards.forEach(card => {
-            const name = card.getAttribute('data-name') || '';
-            const desc = card.querySelector('.card-desc')?.textContent.toLowerCase() || '';
-            const matches = searchTerm === '' || name.includes(searchTerm) || desc.includes(searchTerm);
-            
-            if (matches) {
-                card.classList.remove('hidden');
-                visibleCount++;
-            } else {
-                card.classList.add('hidden');
-                card.classList.remove('expanded');
+            noResults.classList.toggle('visible', visible === 0 && term !== '');
+        }
+        
+        searchInput.addEventListener('input', filterCards);
+        
+        const glow = document.querySelector('.glow');
+        document.addEventListener('mousemove', (e) => {
+            if (glow) {
+                const x = (e.clientX / window.innerWidth - 0.5) * 40;
+                const y = (e.clientY / window.innerHeight - 0.5) * 30;
+                glow.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
             }
         });
-
-        noResults.classList.toggle('visible', visibleCount === 0 && searchTerm !== '');
     }
-
-    searchInput.addEventListener('input', filterCards);
-
-    // Paralaxe no brilho
-    document.addEventListener('mousemove', (e) => {
-        const glow = document.querySelector('.glow');
-        if (glow) {
-            const x = (e.clientX / window.innerWidth - 0.5) * 40;
-            const y = (e.clientY / window.innerHeight - 0.5) * 30;
-            glow.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-        }
-    });
+    
+    if (document.getElementById('mainScreen').classList.contains('show')) {
+        initSnow();
+        initSite();
+    }
 </script>
 </body>
 </html>
