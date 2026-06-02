@@ -1,408 +1,560 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WL-Cheats</title>
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WL-Cheats | Painel</title>
+    
+    <!-- Impedir cache -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background: #0a0c10;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-      color: #f1f1f3;
-      overflow-x: hidden;
-    }
+        body {
+            background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #1a0b2e 100%);
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    .bg-glow {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 80vw;
-      height: 80vh;
-      background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, rgba(10, 12, 16, 0) 70%);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 0;
-      transition: transform 0.08s ease-out;
-    }
+        /* Efeito de neve */
+        .snow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
 
-    .site-content {
-      display: block;
-      opacity: 1;
-      transition: opacity 0.6s ease;
-    }
+        .snow i {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
 
-    .hero {
-      text-align: center;
-      padding: 3rem 1rem 2rem;
-      position: relative;
-      z-index: 2;
-    }
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
 
-    .logo {
-      font-size: 3rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #fff, #a5b4fc);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
+        /* Brilho de fundo */
+        .glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.2) 0%, rgba(26, 11, 46, 0) 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    .logo span {
-      background: linear-gradient(135deg, #8b5cf6, #c084fc);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
+        /* Conteúdo principal */
+        .content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      position: relative;
-      z-index: 2;
-    }
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem 0 1rem;
+            animation: fadeInDown 0.8s ease;
+        }
 
-    .search-wrapper {
-      max-width: 500px;
-      margin: 1rem auto 2rem;
-    }
+        .logo {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #c084fc, #8b5cf6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
 
-    .search-box {
-      background: #11131b;
-      border: 1px solid #1f2230;
-      border-radius: 60px;
-      display: flex;
-      align-items: center;
-      padding: 0.6rem 1.2rem;
-      gap: 8px;
-      transition: 0.2s;
-    }
+        .logo span {
+            background: linear-gradient(135deg, #c084fc, #a855f7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
 
-    .search-box:focus-within {
-      border-color: #8b5cf6;
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-    }
+        .subtitle {
+            color: #c4b5fd;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
 
-    .search-icon {
-      width: 20px;
-      color: #6b7280;
-    }
+        /* Barra de pesquisa */
+        .search-wrapper {
+            max-width: 500px;
+            margin: 2rem auto;
+            animation: fadeInUp 0.8s ease;
+        }
 
-    #searchInput {
-      background: transparent;
-      border: none;
-      width: 100%;
-      color: white;
-      font-size: 1rem;
-      outline: none;
-    }
+        .search-box {
+            background: rgba(30, 20, 50, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            gap: 12px;
+            transition: all 0.3s;
+        }
 
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
+        .search-box:focus-within {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+            transform: scale(1.02);
+        }
 
-    .card {
-      background: #11131b;
-      border: 1px solid #1f2230;
-      border-radius: 1.5rem;
-      overflow: hidden;
-      transition: all 0.25s;
-    }
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            color: #c084fc;
+        }
 
-    .card:hover {
-      border-color: #2d2f3e;
-    }
+        #searchInput {
+            background: transparent;
+            border: none;
+            width: 100%;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
 
-    .card-header {
-      padding: 1.2rem 1.4rem;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        #searchInput::placeholder {
+            color: #7e6b9e;
+        }
 
-    .card-title-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin: 2rem 0;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
 
-    .card-dot {
-      width: 8px;
-      height: 8px;
-      background: #10b981;
-      border-radius: 50%;
-      box-shadow: 0 0 6px #10b981;
-    }
+        .card {
+            background: rgba(25, 20, 45, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
 
-    .card-name {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #8b5cf6;
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.2);
+        }
 
-    .card-arrow {
-      transition: transform 0.2s;
-    }
+        .card-header {
+            padding: 1.2rem 1.4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .card.expanded .card-arrow {
-      transform: rotate(180deg);
-    }
+        .card-title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    .card-body {
-      padding: 0 1.4rem 0 1.4rem;
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
+        .card-icon {
+            width: 10px;
+            height: 10px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #8b5cf6;
+            animation: pulse 1.5s infinite;
+        }
 
-    .card.expanded .card-body {
-      padding: 0 1.4rem 1.2rem 1.4rem;
-      max-height: 200px;
-      opacity: 1;
-    }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
 
-    .card-desc {
-      color: #9ca3af;
-      font-size: 0.85rem;
-      margin-bottom: 1rem;
-    }
+        .card-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f0e6ff;
+        }
 
-    .btn-download {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #8b5cf6;
-      padding: 8px 16px;
-      border-radius: 40px;
-      text-decoration: none;
-      color: white;
-      font-weight: 500;
-      font-size: 0.8rem;
-      transition: 0.2s;
-    }
+        .card-arrow {
+            transition: transform 0.3s;
+            color: #c084fc;
+        }
 
-    .btn-download:hover {
-      background: #7c3aed;
-    }
+        .card.expanded .card-arrow {
+            transform: rotate(180deg);
+        }
 
-    .no-results {
-      text-align: center;
-      color: #6b7280;
-      padding: 2rem;
-      display: none;
-    }
+        .card-body {
+            padding: 0 1.4rem 0 1.4rem;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
 
-    .no-results.visible {
-      display: block;
-    }
+        .card.expanded .card-body {
+            padding: 0 1.4rem 1.2rem 1.4rem;
+            max-height: 200px;
+            opacity: 1;
+        }
 
-    .card.hidden {
-      display: none;
-    }
+        .card-desc {
+            color: #c4b5fd;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
 
-    .footer {
-      text-align: center;
-      padding: 2rem;
-      color: #4b5563;
-      font-size: 0.75rem;
-      border-top: 1px solid #1f2230;
-      margin-top: 2rem;
-    }
-  </style>
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-download:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .no-results {
+            text-align: center;
+            color: #c4b5fd;
+            padding: 2rem;
+            display: none;
+        }
+
+        .no-results.visible {
+            display: block;
+        }
+
+        .card.hidden {
+            display: none;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #7e6b9e;
+            font-size: 0.75rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            margin-top: auto;
+        }
+
+        /* Animações */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a0b2e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 10px;
+        }
+
+        /* Status do usuário */
+        .user-status {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .verified-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #f87171;
+            padding: 5px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.4);
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
 
-  <div class="site-content" id="siteContent">
-    <div class="bg-glow"></div>
+<!-- Efeito de neve -->
+<div class="snow" id="snow"></div>
+<div class="glow"></div>
 
-    <header class="hero">
-      <div class="hero-inner">
-        <h1 class="logo">WL<span>-</span>Cheats</h1>
-        <p class="subtitle"></p>
-      </div>
-    </header>
-
-    <main class="container">
-      <div class="search-wrapper">
-        <div class="search-box">
-          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          <input type="text" id="searchInput" placeholder="Search software..." autocomplete="off" />
+<div class="content">
+    <div class="user-status">
+        <div class="verified-badge">
+            ✓ Verificado
         </div>
-      </div>
+        <button class="logout-btn" onclick="logout()">Sair</button>
+    </div>
 
-      <div class="cards-grid" id="cardsGrid">
+    <div class="header">
+        <h1 class="logo">WL<span>-</span>Cheats</h1>
+        <p class="subtitle"> O MELHOR EM CHEATS ✦</p>
+    </div>
+
+    <div class="search-wrapper">
+        <div class="search-box">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Buscar software..." autocomplete="off" />
+        </div>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid">
         <div class="card" data-name="madium">
-          <div class="card-header">
-            <div class="card-title-row">
-              <div class="card-dot"></div>
-              <h2 class="card-name">Madium</h2>
+            <div class="card-header">
+                <div class="card-title-row">
+                    <div class="card-icon"></div>
+                    <h2 class="card-name">Madium</h2>
+                </div>
+                <div class="card-arrow">▼</div>
             </div>
-            <div class="card-arrow">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"/>
-              </svg>
+            <div class="card-body">
+                <p class="card-desc"> Muito bom, baixe esse aqui porra! .</p>
+                <a class="btn-download" href="#" target="_blank">
+                    📥 Download
+                </a>
             </div>
-          </div>
-          <div class="card-body">
-            <p class="card-desc">Muito bom baixe esse aqui porra</p>
-            <a class="btn-download" href="https://cdn.discordapp.com/attachments/1499041390892552213/1510408932638720060/Madium.rar?ex=6a1cb56f&is=6a1b63ef&hm=891f8081462b03affb6282e4838ad431cd218ba24ca6a37b5e4fdf8edfd65e92&" target="_blank" rel="noopener">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              Download
-            </a>
-          </div>
         </div>
 
         <div class="card" data-name="velocity">
-          <div class="card-header">
-            <div class="card-title-row">
-              <div class="card-dot"></div>
-              <h2 class="card-name">Velocity</h2>
+            <div class="card-header">
+                <div class="card-title-row">
+                    <div class="card-icon"></div>
+                    <h2 class="card-name">Velocity</h2>
+                </div>
+                <div class="card-arrow">▼</div>
             </div>
-            <div class="card-arrow">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"/>
-              </svg>
+            <div class="card-body">
+                <p class="card-desc"> Uma bosta meio bugadinho mas é mt bom. </p>
+                <a class="btn-download" href="#" target="_blank">
+                    📥 Download
+                </a>
             </div>
-          </div>
-          <div class="card-body">
-            <p class="card-desc">Uma bosta meio bugadinho mais e mt bom</p>
-            <a class="btn-download" href="https://work.ink/1Yct/velocitydownload" target="_blank" rel="noopener">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              Download
-            </a>
-          </div>
         </div>
 
         <div class="card" data-name="real">
-          <div class="card-header">
-            <div class="card-title-row">
-              <div class="card-dot"></div>
-              <h2 class="card-name">Real</h2>
+            <div class="card-header">
+                <div class="card-title-row">
+                    <div class="card-icon"></div>
+                    <h2 class="card-name">Real</h2>
+                </div>
+                <div class="card-arrow">▼</div>
             </div>
-            <div class="card-arrow">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"/>
-              </svg>
+            <div class="card-body">
+                <p class="card-desc"> Esse aqui é muito bom mesmo meu querido</p>
+                <a class="btn-download" href="#" target="_blank">
+                    📥 Download
+                </a>
             </div>
-          </div>
-          <div class="card-body">
-            <p class="card-desc">Esse aqui baixe esse aqui e muito bom mesmo meu querido</p>
-            <a class="btn-download" href="https://www.projectreal.net/" target="_blank" rel="noopener">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              Download
-            </a>
-          </div>
         </div>
-      </div>
+    </div>
 
-      <div class="no-results" id="noResults">No software found.</div>
-    </main>
+    <div class="no-results" id="noResults">❌ Nenhum software encontrado.</div>
 
-    <footer class="footer">
-      <p>&copy; 2026 WL-Cheats. All rights reserved.</p>
-    </footer>
-  </div>
+    <div class="footer">
+        <p>© 2026 WL-Cheats. Todos os direitos reservados.</p>
+    </div>
+</div>
 
-  <script>
-    // Funções de Cookie
-    function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            if (cookie.startsWith(name + "=")) {
-                return cookie.substring(name.length + 1);
-            }
-        }
-        return null;
+<script>
+    // Verificar se veio do captcha
+    if (!sessionStorage.getItem('captcha_passed')) {
+        window.location.href = '/';
     }
 
-    // VERIFICAR COOKIE - SE NÃO TIVER, VOLTA PRO CAPTCHA
-    if (getCookie('wl_verified') !== 'true') {
+    // Função de logout
+    function logout() {
+        sessionStorage.removeItem('captcha_passed');
         window.location.href = '/';
     }
 
     // ==============================================
-    // SITE — lógica dos cards e pesquisa
+    // EFEITO DE NEVE
     // ==============================================
+    function createSnow() {
+        const snowContainer = document.getElementById('snow');
+        const snowCount = 120;
+        
+        for (let i = 0; i < snowCount; i++) {
+            const snowflake = document.createElement('i');
+            const size = Math.random() * 6 + 2;
+            const left = Math.random() * 100;
+            const duration = Math.random() * 8 + 4;
+            const delay = Math.random() * 5;
+            
+            snowflake.style.cssText = `
+                left: ${left}%;
+                width: ${size}px;
+                height: ${size}px;
+                animation-duration: ${duration}s;
+                animation-delay: ${delay}s;
+                opacity: ${Math.random() * 0.6 + 0.2};
+            `;
+            
+            snowContainer.appendChild(snowflake);
+        }
+    }
+    
+    createSnow();
 
-    (function initSite() {
-      const searchInput = document.getElementById('searchInput');
-      const cardsGrid = document.getElementById('cardsGrid');
-      const noResults = document.getElementById('noResults');
-      if (!cardsGrid) return;
+    // ==============================================
+    // LÓGICA DOS CARDS E PESQUISA
+    // ==============================================
+    
+    const cards = document.querySelectorAll('.card');
+    const searchInput = document.getElementById('searchInput');
+    const noResults = document.getElementById('noResults');
 
-      const cards = Array.from(cardsGrid.querySelectorAll('.card'));
+    // Toggle dos cards
+    document.querySelectorAll('.card-header').forEach(header => {
+        header.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const card = this.closest('.card');
+            const isExpanded = card.classList.contains('expanded');
+            
+            // Fecha todos os outros
+            cards.forEach(c => {
+                if (c !== card) c.classList.remove('expanded');
+            });
+            
+            // Alterna o atual
+            card.classList.toggle('expanded', !isExpanded);
+        });
+    });
 
-      window.toggleCard = function (header) {
-        const card = header.closest('.card');
-        const isExpanded = card.classList.contains('expanded');
-        cards.forEach(c => { if (c !== card) c.classList.remove('expanded'); });
-        card.classList.toggle('expanded', !isExpanded);
-      };
+    // Impedir clique no download de fechar o card
+    document.querySelectorAll('.btn-download').forEach(btn => {
+        btn.addEventListener('click', (e) => e.stopPropagation());
+    });
 
-      document.querySelectorAll('.card-header').forEach(header => {
-        header.onclick = function() {
-          const card = this.closest('.card');
-          const isExpanded = card.classList.contains('expanded');
-          cards.forEach(c => { if (c !== card) c.classList.remove('expanded'); });
-          card.classList.toggle('expanded', !isExpanded);
-        };
-      });
-
-      searchInput.addEventListener('input', () => {
-        const q = searchInput.value.trim().toLowerCase();
-        let visible = 0;
+    // Função de busca
+    function filterCards() {
+        const searchTerm = searchInput.value.toLowerCase();
+        let visibleCount = 0;
 
         cards.forEach(card => {
-          const name = card.dataset.name || '';
-          const desc = card.querySelector('.card-desc')?.textContent.toLowerCase() || '';
-          const match = !q || name.includes(q) || desc.includes(q);
-
-          card.classList.toggle('hidden', !match);
-          if (!match) card.classList.remove('expanded');
-          if (match) visible++;
+            const name = card.getAttribute('data-name') || '';
+            const desc = card.querySelector('.card-desc')?.textContent.toLowerCase() || '';
+            const matches = searchTerm === '' || name.includes(searchTerm) || desc.includes(searchTerm);
+            
+            if (matches) {
+                card.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('hidden');
+                card.classList.remove('expanded');
+            }
         });
 
-        noResults.classList.toggle('visible', visible === 0 && q.length > 0);
-      });
+        noResults.classList.toggle('visible', visibleCount === 0 && searchTerm !== '');
+    }
 
-      document.querySelectorAll('.btn-download').forEach(btn => {
-        btn.addEventListener('click', e => e.stopPropagation());
-      });
+    searchInput.addEventListener('input', filterCards);
 
-      const bgGlow = document.querySelector('.bg-glow');
-      document.addEventListener('mousemove', e => {
-        if (!bgGlow) return;
-        const x = (e.clientX / window.innerWidth - 0.5) * 30;
-        const y = (e.clientY / window.innerHeight - 0.5) * 20;
-        bgGlow.style.transform = `translateX(calc(-50% + ${x}px)) translateY(${y}px)`;
-      });
-    })();
-  </script>
+    // Paralaxe no brilho
+    document.addEventListener('mousemove', (e) => {
+        const glow = document.querySelector('.glow');
+        if (glow) {
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 30;
+            glow.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+        }
+    });
+</script>
 </body>
 </html>
